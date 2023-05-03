@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Debug",
             "program": "${workspaceFolder}/AsusUtils",
-            "args": ["SetSecondScreenBrightness", "0"],
+            "args": ["SetSecondScreenBrightness", "100"],
             "cwd": "${workspaceFolder}"
         }
     ]
