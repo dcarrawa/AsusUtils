@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <fstream>
 #include <functional>
 #include <string>
 #include <unistd.h>
@@ -44,27 +45,31 @@ static void SetSecondScreenEnabledCLI(int32_t argc, char* argv[])
 
 static void CycleSecondScreenModesCLI(int32_t argc, char* argv[])
 {
-    const std::string secondScreenEnabledCommand = "cat " + c_SecondScreenEnabledPath;
-    const int32_t secondScreenIsEnabled = system(secondScreenEnabledCommand.c_str());
-
-    if (secondScreenIsEnabled == 0)
+    std::ifstream enabledStream(c_SecondScreenEnabledPath);
+    if (enabledStream.is_open())
     {
-        SetSecondScreenEnabled("1");
-        SetSecondScreenBrightness("100");
-    }
-    else
-    {
-        const std::string secondScreenBrightnessCommand =
-            "cat " + c_SecondScreenBrightnessPath;
-        const int32_t screenBrightness = system(secondScreenBrightnessCommand.c_str());
+        int32_t secondScreenIsEnabled = 0;
+        enabledStream >> secondScreenIsEnabled;
 
-        if (screenBrightness > 0)
+        if (secondScreenIsEnabled == 0)
         {
-            SetSecondScreenBrightness("0");
+            SetSecondScreenEnabled("1");
+            SetSecondScreenBrightness("255");
         }
         else
         {
-            SetSecondScreenEnabled("0");
+            std::ifstream brightnessStream(c_SecondScreenBrightnessPath);
+            int32_t screenBrightness = 0;
+            brightnessStream >> screenBrightness;
+
+            if (screenBrightness > 0)
+            {
+                SetSecondScreenBrightness("0");
+            }
+            else
+            {
+                SetSecondScreenEnabled("0");
+            }
         }
     }
 }
