@@ -6,12 +6,12 @@
 #include <unordered_map>
 
 static const std::string c_SecondScreenBrightnessPath =
-    "/sys/class/backlight/asus-screenpad/brightness";
+    "/sys/class/backlight/asus_screenpad/brightness";
 
 static const std::string c_SecondScreenEnabledPath =
-    "/sys/class/backlight/asus-screenpad/bl_power";
+    "/sys/class/backlight/asus_screenpad/bl_power";
 
-static constexpr uint32_t c_MinBrightness = 0;
+static constexpr uint32_t c_MinBrightness = 3;
 static constexpr uint32_t c_MaxBrightness = 255;
 static constexpr uint32_t c_ScreenOn = 0;
 static constexpr uint32_t c_ScreenOff = 4;
@@ -69,7 +69,7 @@ static void CycleSecondScreenModesCLI(int32_t argc, char* argv[])
             int32_t screenBrightness = 0;
             brightnessStream >> screenBrightness;
 
-            if (screenBrightness > 0)
+            if (screenBrightness > c_MinBrightness)
             {
                 SetSecondScreenBrightness(std::to_string(c_MinBrightness));
             }
