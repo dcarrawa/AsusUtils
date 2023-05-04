@@ -81,11 +81,12 @@ static void CycleSecondScreenModesCLI(int32_t argc, char* argv[])
     }
 }
 
-static std::unordered_map<std::string, std::function<void(int32_t, char*[])>> s_Commands {
-    {"SetSecondScreenBrightness", &SetSecondScreenBrightnessCLI},
-    {"SetSecondScreenEnabled", &SetSecondScreenEnabledCLI},
-    {"CycleSecondScreenModes", &CycleSecondScreenModesCLI},
-};
+static const std::unordered_map<std::string, std::function<void(int32_t, char*[])>>
+    s_Commands {
+        {"SetSecondScreenBrightness", &SetSecondScreenBrightnessCLI},
+        {"SetSecondScreenEnabled", &SetSecondScreenEnabledCLI},
+        {"CycleSecondScreenModes", &CycleSecondScreenModesCLI},
+    };
 
 int32_t main(int32_t argc, char* argv[])
 {
