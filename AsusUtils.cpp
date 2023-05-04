@@ -6,10 +6,10 @@
 #include <unordered_map>
 
 static const std::string c_SecondScreenBrightnessPath =
-    "/sys/class/backlight/asus-nb-wmi/brightness";
+    "/sys/class/backlight/asus-screenpad/brightness";
 
 static const std::string c_SecondScreenEnabledPath =
-    "/sys/class/backlight/asus-nb-wmi/bl_power";
+    "/sys/class/backlight/asus-screenpad/bl_power";
 
 static constexpr uint32_t c_MinBrightness = 0;
 static constexpr uint32_t c_MaxBrightness = 255;
