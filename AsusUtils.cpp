@@ -124,14 +124,14 @@ static const std::unordered_map<std::string, std::function<void(int32_t, char*[]
 
 int32_t main(int32_t argc, char* argv[])
 {
-    static constexpr uid_t rootUid = 0;
-    setuid(rootUid);
-
     if (argc > 1)
     {
         const auto& command = s_Commands.find(argv[1]);
         if (command != s_Commands.end())
         {
+            static constexpr uid_t rootUid = 0;
+            setuid(rootUid);
+
             command->second(argc, argv);
         }
     }
