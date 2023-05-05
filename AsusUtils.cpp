@@ -11,10 +11,25 @@ static const std::string c_SecondScreenBrightnessPath =
 static const std::string c_SecondScreenEnabledPath =
     "/sys/class/backlight/asus_screenpad/bl_power";
 
-static constexpr uint8_t c_MinBrightness = 1;
-static constexpr uint8_t c_MaxBrightness = 255;
-static constexpr uint8_t c_ScreenOn = 0;
-static constexpr uint8_t c_ScreenOff = 4;
+static constexpr int32_t c_MinBrightness = 0;
+static constexpr int32_t c_MaxBrightness = 255;
+static constexpr int32_t c_BrightnessIncrement = 10;
+static constexpr int32_t c_ScreenEnabled = 0;
+static constexpr int32_t c_ScreenDisabled = 4;
+
+static int32_t GetSecondScreenBrightness()
+{
+    int32_t screenBrightness = 0;
+
+    std::ifstream brightnessStream(c_SecondScreenBrightnessPath);
+
+    if (brightnessStream.is_open())
+    {
+        brightnessStream >> screenBrightness;
+    }
+
+    return screenBrightness;
+}
 
 static void SetSecondScreenBrightness(const std::string& brightness)
 {
@@ -22,6 +37,30 @@ static void SetSecondScreenBrightness(const std::string& brightness)
     if (setBrightnessStream.is_open())
     {
         setBrightnessStream << brightness;
+    }
+}
+
+static bool GetSecondScreenEnabled()
+{
+    bool isEnabled = false;
+
+    std::ifstream enabledStream(c_SecondScreenEnabledPath);
+    if (enabledStream.is_open())
+    {
+        int32_t secondScreenIsEnabled = 0;
+        enabledStream >> secondScreenIsEnabled;
+        isEnabled = (secondScreenIsEnabled == c_ScreenEnabled);
+    }
+
+    return isEnabled;
+}
+
+static void SetSecondScreenEnabled(const std::string& screenEnabled)
+{
+    std::ofstream setScreenEnabledStream(c_SecondScreenEnabledPath);
+    if (setScreenEnabledStream.is_open())
+    {
+        setScreenEnabledStream << screenEnabled;
     }
 }
 
@@ -33,13 +72,16 @@ static void SetSecondScreenBrightnessCLI(int32_t argc, char* argv[])
     }
 }
 
-static void SetSecondScreenEnabled(const std::string& screenEnabled)
+static void IncreaseSecondScreenBrightnessCLI(int32_t argc, char* argv[])
 {
-    std::ofstream setScreenEnabledStream(c_SecondScreenEnabledPath);
-    if (setScreenEnabledStream.is_open())
-    {
-        setScreenEnabledStream << screenEnabled;
-    }
+    SetSecondScreenBrightness(std::to_string(
+        std::min(GetSecondScreenBrightness() + c_BrightnessIncrement, c_MaxBrightness)));
+}
+
+static void DecreaseSecondScreenBrightnessCLI(int32_t argc, char* argv[])
+{
+    SetSecondScreenBrightness(std::to_string(
+        std::max(GetSecondScreenBrightness() - c_BrightnessIncrement, c_MinBrightness)));
 }
 
 static void SetSecondScreenEnabledCLI(int32_t argc, char* argv[])
@@ -52,31 +94,20 @@ static void SetSecondScreenEnabledCLI(int32_t argc, char* argv[])
 
 static void CycleSecondScreenModesCLI(int32_t argc, char* argv[])
 {
-    std::ifstream enabledStream(c_SecondScreenEnabledPath);
-    if (enabledStream.is_open())
+    if (!GetSecondScreenEnabled())
     {
-        uint32_t secondScreenIsEnabled = 0;
-        enabledStream >> secondScreenIsEnabled;
-
-        if (secondScreenIsEnabled != c_ScreenOn)
+        SetSecondScreenEnabled(std::to_string(c_ScreenEnabled));
+        SetSecondScreenBrightness(std::to_string(c_MaxBrightness));
+    }
+    else
+    {
+        if (GetSecondScreenBrightness() > c_MinBrightness)
         {
-            SetSecondScreenEnabled(std::to_string(c_ScreenOn));
-            SetSecondScreenBrightness(std::to_string(c_MaxBrightness));
+            SetSecondScreenBrightness(std::to_string(c_MinBrightness));
         }
         else
         {
-            std::ifstream brightnessStream(c_SecondScreenBrightnessPath);
-            uint32_t screenBrightness = 0;
-            brightnessStream >> screenBrightness;
-
-            if (screenBrightness > c_MinBrightness)
-            {
-                SetSecondScreenBrightness(std::to_string(c_MinBrightness));
-            }
-            else
-            {
-                SetSecondScreenEnabled(std::to_string(c_ScreenOff));
-            }
+            SetSecondScreenEnabled(std::to_string(c_ScreenDisabled));
         }
     }
 }
@@ -85,6 +116,8 @@ static const std::unordered_map<std::string, std::function<void(int32_t, char*[]
     s_Commands {
         {"SetSecondScreenBrightness", &SetSecondScreenBrightnessCLI},
         {"SetSecondScreenEnabled", &SetSecondScreenEnabledCLI},
+        {"IncreaseSecondScreenBrightness", &IncreaseSecondScreenBrightnessCLI},
+        {"DecreaseSecondScreenBrightness", &DecreaseSecondScreenBrightnessCLI},
         {"CycleSecondScreenModes", &CycleSecondScreenModesCLI},
     };
 
