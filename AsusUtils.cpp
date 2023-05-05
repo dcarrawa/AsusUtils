@@ -22,7 +22,6 @@ static int32_t GetSecondScreenBrightness()
     int32_t screenBrightness = 0;
 
     std::ifstream brightnessStream(c_SecondScreenBrightnessPath);
-
     if (brightnessStream.is_open())
     {
         brightnessStream >> screenBrightness;
