@@ -55,7 +55,7 @@ static void CycleSecondScreenModesCLI(int32_t argc, char* argv[])
     std::ifstream enabledStream(c_SecondScreenEnabledPath);
     if (enabledStream.is_open())
     {
-        int32_t secondScreenIsEnabled = -1;
+        uint32_t secondScreenIsEnabled = 0;
         enabledStream >> secondScreenIsEnabled;
 
         if (secondScreenIsEnabled != c_ScreenOn)
@@ -66,7 +66,7 @@ static void CycleSecondScreenModesCLI(int32_t argc, char* argv[])
         else
         {
             std::ifstream brightnessStream(c_SecondScreenBrightnessPath);
-            int32_t screenBrightness = 0;
+            uint32_t screenBrightness = 0;
             brightnessStream >> screenBrightness;
 
             if (screenBrightness > c_MinBrightness)
