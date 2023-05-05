@@ -1,5 +1,5 @@
 # AsusUtils
 Utilities to help with controlling Asus dual screen laptops on linux.
 
-- Build with sh build.sh
+- Build and install with sh Install.sh (Ensure you have gcc installed).
 - Call the functions from the command line or bind them to your favorite keys.
