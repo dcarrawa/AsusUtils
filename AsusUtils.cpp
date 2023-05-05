@@ -94,6 +94,8 @@ static void SetSecondScreenEnabledCLI(int32_t argc, char* argv[])
 
 static void CycleSecondScreenModesCLI(int32_t argc, char* argv[])
 {
+    // Replicates the functionality found in the Windows driver
+    // On -> Hidden -> Off -> On -> ...
     if (!GetSecondScreenEnabled())
     {
         SetSecondScreenEnabled(std::to_string(c_ScreenEnabled));
