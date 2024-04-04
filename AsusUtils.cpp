@@ -12,7 +12,7 @@ static const std::string c_SecondScreenEnabledPath =
     "/sys/class/backlight/asus_screenpad/bl_power";
 
 static constexpr int32_t c_MinBrightness = 0;
-static constexpr int32_t c_MaxBrightness = 255;
+static constexpr int32_t c_MaxBrightness = 235;
 static constexpr int32_t c_BrightnessIncrement = 10;
 static constexpr int32_t c_ScreenEnabled = 0;
 static constexpr int32_t c_ScreenDisabled = 4;
